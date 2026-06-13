@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from task_flow_api.models.enums import TaskStatus
 
 if TYPE_CHECKING:
+    from task_flow_api.models.comment import Comment
     from task_flow_api.models.project import Project
 
 
@@ -48,3 +49,6 @@ class Task(Base):
     )
 
     project: Mapped["Project"] = relationship(back_populates="tasks")
+    comments: Mapped[list["Comment"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
