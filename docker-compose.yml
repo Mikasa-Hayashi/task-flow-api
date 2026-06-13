@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: taskflow_postgres
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow
+      POSTGRES_DB: taskflowdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - taskflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskflow -d taskflowdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: taskflow_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - taskflow_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  taskflow_postgres_data:
+  taskflow_redis_data:
